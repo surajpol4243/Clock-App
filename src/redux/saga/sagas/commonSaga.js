@@ -20,6 +20,7 @@ export function* getTimeZoneData(action) {
 export function* setUserInfo(action) {
     try {
         // Get data from action
+        console.log(action.obj)
         const data = action?.obj;
         // dispatch ser user info action
         yield put(receiveSetUserData(data))

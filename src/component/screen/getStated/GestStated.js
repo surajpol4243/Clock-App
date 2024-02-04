@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, Image, TouchableOpacity, TextInput } from "react-native";
+import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import CustomTextInput from "../../common/CustomTextInput";
 import DropDownPicker from "react-native-dropdown-picker";
 import Colors from "../../../constants/Colors";
-import { requestGetTimeZone } from "../../../redux/actions/actionCreators/commonActionCreators";
+import { requestGetTimeZone, reqeustSetUserData } from "../../../redux/actions/actionCreators/commonActionCreators";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import styles from "./styles";
-import { useNavigation } from "@react-navigation/native";
 
 const GetStatedScreen = (props) => {
     const [isDropOpen, setDropOpen] = useState(false);
     const [timeZoneList, setTimeZoneList] = useState([]);
-    const [zoneList, setZoneList] = useState([])
-    const [isOpen, setOpen] = useState(false)
     const [userName, setUserName] = useState(null)
     const [value, setValue] = useState(null);
-    const navigation = useNavigation();
 
     useEffect(() => {
         props.requestGetTimeZone();
@@ -73,14 +68,15 @@ const GetStatedScreen = (props) => {
                 <TouchableOpacity
                     style={[styles.getStartContiner, { opacity: (userName == null || value == null) ? 0.5 : 1 }]}
                     disabled={userName == null || value == null}
-                    onPress={() => { 
-
+                    onPress={() => {
+                        props.reqeustSetUserData({ userName: userName, timeZone: value })
                         props.navigation.navigate("HomeScreen")
-                         }} >
+                    }} >
                     <Text style={styles.startButtonText}>Get Stated {">"}</Text>
                 </TouchableOpacity>
             </View>
         </View>
+
     )
 };
 
@@ -91,7 +87,88 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    requestGetTimeZone
+    requestGetTimeZone, reqeustSetUserData
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(GetStatedScreen);
+
+
+const styles = StyleSheet.create({
+    continer: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: Colors.BLACK_44
+    },
+    logoContiner: {
+        flex: 1,
+        alignItems: 'center'
+    },
+    logo: {
+        height: 200,
+        width: 200,
+        marginTop: 100
+    },
+    logoText: {
+        fontSize: 25,
+        color: Colors.WHITE
+    },
+    inputFieldForm: {
+        flex: 1,
+        alignItems: 'center',
+        width: "100%"
+    },
+    textInputDdecoration: {
+        borderWidth: 1,
+        borderColor: Colors.PRIMARY_BLUE,
+        width: "90%",
+        borderRadius: 10,
+        fontSize: 16,
+        paddingLeft: 10,
+        marginTop: 50,
+        marginBottom: 10,
+        backgroundColor: Colors.BLACK_30,
+        height: 50
+    },
+    dropDownParentContiner: {
+        width: "90%",
+        marginBottom: 50
+    },
+    dropDownContainerStyle: {
+        borderColor: Colors.PRIMARY_YELLOW,
+        borderWidth: 1,
+        backgroundColor: Colors.BLACK_30,
+    },
+    dropDownTextStyle: {
+        color: Colors.WHITE,
+        fontSize: 16
+    },
+    dropDownplaceHolderStyle: {
+        color: Colors.GRAY_186,
+        fontSize: 16
+    },
+    getStartContiner: {
+        height: 51,
+        width: 200,
+        borderRadius: 20,
+        backgroundColor: Colors.PRIMARY_BLUE,
+        overflow: "hidden",
+        flexDirection: "row",
+        justifyContent: 'center',
+        alignItems: "center"
+    },
+    startButtonText: {
+        fontSize: 20,
+        color: Colors.WHITE
+    },
+    dropDownContainderStlye: {
+        backgroundColor: Colors.BLACK_20,
+        borderWidth: 1,
+        borderColor: Colors.PRIMARY_BLUE,
+    },
+    dropDownStyle: {
+        backgroundColor: Colors.BLACK_20,
+        borderWidth: 1,
+        borderColor: Colors.PRIMARY_BLUE
+    }
+
+});
